@@ -14,6 +14,10 @@ using namespace std;
 
 void LineDrawer::setup()
 {
+    color.x=0;
+    color.y=0;
+    color.z=0;
+    drawSize=10;
 
     mGlsl = cinder::gl::GlslProg::create( cinder::gl::GlslProg::Format()
                                  .vertex(	CI_GLSL( 150,
@@ -25,14 +29,15 @@ void LineDrawer::setup()
                                                     }
                                                     ) )
                                  .fragment(	CI_GLSL( 150,
+                                                    uniform vec3		drawColor;
                                                     out vec4			oColor;
-                                                    
+                                                   
                                                     void main( void ) {
                                                         vec2 uv = gl_PointCoord.xy * 2. - 1.;
                                                      
                                                         float l = min(length(uv), 1.);
                                                         float brightness = smoothstep(0.0, 0.4, 1-l);
-                                                        oColor = vec4( 0, 0, 0, brightness);
+                                                        oColor = vec4( drawColor.x, drawColor.y , drawColor.z, brightness);
                                                     }
                                                     ) ) );
     
@@ -78,7 +83,8 @@ void LineDrawer::mouseDrag( ci::vec2 pos)
 void LineDrawer::draw()
 {
     ci::gl::ScopedGlslProg prog(mGlsl);
-    
+    mGlsl->uniform("drawColor", color);
+    cinder::gl::pointSize(drawSize);//10
     for(auto l:lines )
     {
         l->draw();
@@ -93,10 +99,12 @@ void LineDrawer::reset()
 bool LineDrawer::drawCount()
 {
     ci::gl::ScopedGlslProg prog(mGlsl);
-  
+    mGlsl->uniform("drawColor", color);
+    cinder::gl::pointSize(drawSize);//10
+
     ci::gl::disableDepthRead();
     ci::gl::enableAlphaBlendingPremult();
-    for(int i=0;i<40;i++){
+    for(int i=0;i<20;i++){
     if(lineIndex>=lines.size()) return true;
     if(bolIndex>=lines[lineIndex]->points.size() )
     {

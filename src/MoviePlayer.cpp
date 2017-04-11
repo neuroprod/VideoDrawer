@@ -10,7 +10,7 @@
 
 void MoviePlayer::setup()
 {
-    fs::path moviePath = getAssetPath("movie.MOV");
+    fs::path moviePath = getAssetPath("drawTest.mp4");
     if( ! moviePath.empty() )
         loadMovieFile( moviePath );
     

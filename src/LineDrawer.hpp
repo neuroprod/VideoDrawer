@@ -34,5 +34,8 @@ public:
     bool drawing =false;
     int lineIndex =0;
      int bolIndex =0;
+    
+    ci::vec3 color;
+    int drawSize;
 };
 #endif /* LineDrawer_hpp */

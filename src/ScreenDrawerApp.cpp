@@ -57,19 +57,44 @@ void ScreenDrawerApp::keyUp( KeyEvent event )
         count =0;
         rendering =true;
         writer.mFbo->bindFramebuffer();
-       gl::clear( ColorA( 0.f, 0.f, 0.f,0.f ) );
- writer.mFbo->unbindFramebuffer();
+        gl::clear( ColorA( 0.f, 0.f, 0.f,0.f ) );
+        writer.mFbo->unbindFramebuffer();
         drawer.reset();
         writer.start();
         
-    }if(event.getCode()==KeyEvent::KEY_u)
+    }else if(event.getCode()==KeyEvent::KEY_u)
     {
         drawer.lines.pop_back();
        
-    }if(event.getCode()==KeyEvent::KEY_c)
+    }else if(event.getCode()==KeyEvent::KEY_c)
     {
         drawer.lines.clear();
        
+    }else if(event.getCode()==KeyEvent::KEY_UP)
+    {
+        drawer.drawSize ++;
+        
+    }else if(event.getCode()==KeyEvent::KEY_DOWN)
+    {
+        drawer.drawSize --;
+        if(drawer.drawSize<1)drawer.drawSize=1;
+        
+    }else if(event.getCode()==KeyEvent::KEY_n)
+    {
+        console()<<drawer.color.x<<"??"<<endl;
+        if(drawer.color.x ==1)
+        {
+            drawer.color.x =0;
+            drawer.color.y =0;
+            drawer.color.z =0;
+        }else
+        {
+            drawer.color.x =1;
+            drawer.color.y =1;
+            drawer.color.z =1;
+        
+        }
+        
     }
 
 };
@@ -82,10 +107,17 @@ void ScreenDrawerApp::update()
 void ScreenDrawerApp::draw()
 {
     
-	gl::clear( Color( 1, 1, 1 ) );
+	gl::clear( Color( 0.5, 0.5, 0.5 ) );
    
     if(rendering)
     {
+        if(!writer.mMovieExporter)
+        {
+        
+            rendering=false;
+            return;
+        }
+        
         writer.mFbo->bindFramebuffer();
       
         
@@ -105,8 +137,10 @@ void ScreenDrawerApp::draw()
         
         }
     }else{
-    player.draw();
-    drawer.draw();
+        player.draw();
+        drawer.draw();
+        
+        ci::gl::drawString("drop video file  r:render u:undo c:clear up:+size down:-size n:togle-color",ci::vec2(0,ci::app::getWindowHeight()-10));
     }
 
 }

@@ -62,7 +62,7 @@ void lLine::addPoint(ci::vec2 point)
 void lLine::draw()
 {
     
-    gl::pointSize(12);
+    
     gl::draw(mesh);
 
 }
